@@ -27,14 +27,14 @@
     <!-- force at least version 2.16 due to https://logging.apache.org/log4j/2.x/security.html -->
 
     <log4j.version>2.16.0</log4j.version>
-    <openapi-generator-maven-plugin.version>6.2.0</openapi-generator-maven-plugin.version>
+    <openapi-generator-maven-plugin.version>6.2.1</openapi-generator-maven-plugin.version>
     <jackson-databind-nullable.version>0.2.3</jackson-databind-nullable.version>
     <springfox-swagger2.version>3.0.0</springfox-swagger2.version>
     <springfox-bean-validators.version>3.0.0</springfox-bean-validators.version>
     <springfox-swagger-ui.version>3.0.0</springfox-swagger-ui.version>
     <commons-lang3.version>3.11</commons-lang3.version>
-    <keycloak-spring-security-adapter.version>15.0.2</keycloak-spring-security-adapter.version>
-    <keycloak-spring-boot-starter.version>15.0.2</keycloak-spring-boot-starter.version>
+    <keycloak-spring-security-adapter.version>16.0.0</keycloak-spring-security-adapter.version>
+    <keycloak-spring-boot-starter.version>16.0.0</keycloak-spring-boot-starter.version>
     <keycloak-admin-client.version>16.0.0</keycloak-admin-client.version>
     <powermock-module-junit4.version>2.0.2</powermock-module-junit4.version>
     <powermock-api-mockito2.version>2.0.2</powermock-api-mockito2.version>
@@ -47,12 +47,12 @@
     <liquibase-maven-plugin.version>4.1.1</liquibase-maven-plugin.version>
     <owasp-java-html-sanitizer.version>20211018.2</owasp-java-html-sanitizer.version>
     <liquibase-core.version>4.9.1</liquibase-core.version>
-    <ehcache.version>2.10.6</ehcache.version>
     <hibernate-validator.version>6.1.6.Final</hibernate-validator.version>
     <spring-security-test.version>5.5.7</spring-security-test.version>
     <spring-boot-starter-data-mongodb.version>2.7.5</spring-boot-starter-data-mongodb.version>
     <spring-boot-starter.version>2.5.14</spring-boot-starter.version>
     <spring-data-mongodb.version>3.3.5</spring-data-mongodb.version>
+    <ehcache.version>2.10.9.2</ehcache.version>
   </properties>
 
   <dependencies>
@@ -86,6 +86,12 @@
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache</artifactId>
       <version>${ehcache.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.hibernate.validator</groupId>
@@ -134,6 +140,12 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>${commons-lang3.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.jknack</groupId>
+      <artifactId>handlebars</artifactId>
+      <version>4.3.1</version>
     </dependency>
 
     <!-- Keycloak dependencies -->
@@ -222,7 +234,23 @@
       <artifactId>json</artifactId>
       <version>${json.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>3.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.plexus</groupId>
+      <artifactId>plexus-build-api</artifactId>
+      <version>0.0.7</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-utils</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/net.javacrumbs.json-unit/json-unit -->
     <dependency>
       <groupId>net.javacrumbs.json-unit</groupId>
@@ -242,6 +270,7 @@
       <artifactId>javax.ws.rs-api</artifactId>
       <version>${javax.ws.rs-api.version}</version>
     </dependency>
+
 
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
