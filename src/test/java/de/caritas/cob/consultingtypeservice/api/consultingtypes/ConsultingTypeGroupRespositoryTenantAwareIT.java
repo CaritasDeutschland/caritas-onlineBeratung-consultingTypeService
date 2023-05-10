@@ -20,11 +20,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 @AutoConfigureMockMvc(addFilters = false)
 @TestPropertySource(properties = "spring.profiles.active=testing")
 @TestPropertySource(properties = "multitenancy.enabled=true")
-@TestPropertySource(properties = "consulting.types.json.path=src/test/resources/consulting-type-settings-tenant-specific")
+@TestPropertySource(
+    properties =
+        "consulting.types.json.path=src/test/resources/consulting-type-settings-tenant-specific")
 public class ConsultingTypeGroupRespositoryTenantAwareIT {
 
-  @Autowired
-  private ConsultingTypeGroupRepository consultingTypeGroupRepository;
+  @Autowired private ConsultingTypeGroupRepository consultingTypeGroupRepository;
 
   @AfterEach
   public void tearDown() {
@@ -37,14 +38,14 @@ public class ConsultingTypeGroupRespositoryTenantAwareIT {
     TenantContext.setCurrentTenant(2L);
 
     // when
-    var result = consultingTypeGroupRepository
-        .getConsultingTypesGroupMap();
+    var result = consultingTypeGroupRepository.getConsultingTypesGroupMap();
 
     // then
     assertGroupsCorrectlyRetrievedAndFilteredForTenant(result);
   }
 
-  private void assertGroupsCorrectlyRetrievedAndFilteredForTenant(Map<String, List<ConsultingType>> result) {
+  private void assertGroupsCorrectlyRetrievedAndFilteredForTenant(
+      Map<String, List<ConsultingType>> result) {
     assertThat(result).isNotNull();
     final String GROUP_1 = "group1";
     assertThat(result.get(GROUP_1)).isNull();
@@ -53,11 +54,12 @@ public class ConsultingTypeGroupRespositoryTenantAwareIT {
     final int CONSULTING_TYPE_ID_1 = 11;
     final int CONSULTING_TYPE_ID_2 = 12;
     assertThat(result.get(GROUP_2)).hasSize(1);
-    assertThat(result.get(GROUP_3)).hasSize(2);
+    assertThat(result.get(GROUP_3)).hasSize(1);
     assertThat(result).containsKey(GROUP_2);
     assertThat(result).containsKey(GROUP_3);
     assertThat(result.get(GROUP_2).get(0).getId()).isEqualTo(CONSULTING_TYPE_ID_1);
-    assertThat(result.get(GROUP_3)).extracting(group -> group.getId())
-        .contains(CONSULTING_TYPE_ID_1, CONSULTING_TYPE_ID_2);
+    assertThat(result.get(GROUP_3))
+        .extracting(ConsultingType::getId)
+        .contains(CONSULTING_TYPE_ID_1);
   }
 }

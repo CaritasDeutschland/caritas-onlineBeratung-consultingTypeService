@@ -127,6 +127,32 @@ paths:
           description: FORBIDDEN - no/invalid role/authorization or CSRF token
         500:
           description: INTERNAL SERVER ERROR - server encountered unexpected condition
+  /consultingtypes/bytenant/{tenantId}/full:
+    get:
+      tags:
+        - consulting-type-controller
+      summary: 'Returns the consulting type with all properties for a given consulting type tenantId'
+      operationId: getFullConsultingTypeByTenantId
+      parameters:
+        - name: tenantId
+          in: path
+          description: consulting type tenantId
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: successful operation
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/FullConsultingTypeResponseDTO'
+        404:
+          description: NOT FOUND - ConsultingType not found
+        403:
+          description: FORBIDDEN - no/invalid role/authorization or CSRF token
+        500:
+          description: INTERNAL SERVER ERROR - server encountered unexpected condition
   /consultingtypes/groups:
     get:
       tags:
@@ -174,6 +200,37 @@ paths:
           description: INTERNAL SERVER ERROR - server encountered unexpected condition
       security:
         - Bearer: [ ]
+  /consultingtypes/{id}:
+    patch:
+      tags:
+        - consulting-type-controller
+      summary: 'Updates a consulting type [Authorization: Role: tenant-admin]'
+      operationId: patchConsultingType
+      parameters:
+        - name: id
+          in: path
+          description: ConsultingType ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/ConsultingTypePatchDTO'
+      responses:
+        200:
+          description: Successful operation
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/FullConsultingTypeResponseDTO'
+        401:
+          description: UNAUTHORIZED - no/invalid Keycloak token
+        409:
+          description: CONFLICT - unique constraint validation fails
+        500:
+          description: INTERNAL SERVER ERROR - server encountered unexpected condition
 
 components:
   schemas:
@@ -216,9 +273,6 @@ components:
         isAnonymousConversationAllowed:
           type: boolean
           example: false
-        isSetEmailAllowed:
-          type: boolean
-          example: true
         showAskerProfile:
           type: boolean
           example: true
@@ -238,9 +292,6 @@ components:
             slug:
               type: string
               example: part-of-url
-            lockedAgencies:
-              type: boolean
-              example: false
             excludeNonMainConsultantsFromTeamSessions:
               type: boolean
               example: true
@@ -256,15 +307,9 @@ components:
             sendFurtherStepsMessage:
               type: boolean
               example: true
-            sendSaveSessionDataMessage:
-              type: boolean
-              example: false
             sessionDataInitializing:
               allOf:
                 - $ref: '#/components/schemas/SessionDataInitializingDTO'
-            monitoring:
-              allOf:
-                - $ref: '#/components/schemas/MonitoringDTO'
             initializeFeedbackChat:
               type: boolean
               example: true
@@ -283,10 +328,6 @@ components:
         - $ref: '#/components/schemas/ExtendedConsultingTypeResponseDTO'
         - type: object
           properties:
-            voluntaryComponents:
-              type: array
-              items:
-                type: object
             requiredComponents:
               type: object
             welcomeScreen:
@@ -317,9 +358,6 @@ components:
         isAnonymousConversationAllowed:
           type: boolean
           example: false
-        isSetEmailAllowed:
-          type: boolean
-          example: true
         showAskerProfile:
           type: boolean
           example: true
@@ -329,18 +367,12 @@ components:
         languageFormal:
           type: boolean
           example: true
-        lockedAgencies:
-          type: boolean
-          example: false
         consultantBoundedToConsultingType:
           type: boolean
           example: false
         sendFurtherStepsMessage:
           type: boolean
           example: true
-        sendSaveSessionDataMessage:
-          type: boolean
-          example: false
         initializeFeedbackChat:
           type: boolean
           example: true
@@ -371,18 +403,11 @@ components:
         sessionDataInitializing:
           allOf:
             - $ref: '#/components/schemas/SessionDataInitializingDTO'
-        monitoring:
-          allOf:
-            - $ref: '#/components/schemas/MonitoringDTO'
         roles:
           $ref: '#/components/schemas/RolesDTO'
         notifications:
           allOf:
             - $ref: '#/components/schemas/NotificationsDTO'
-        voluntaryComponents:
-          type: array
-          items:
-            type: object
         requiredComponents:
           $ref: '#/components/schemas/RequiredComponentsDTO'
         welcomeScreen:
@@ -517,16 +542,6 @@ components:
           type: boolean
           example: true
 
-    MonitoringDTO:
-      type: object
-      properties:
-        initializeMonitoring:
-          type: boolean
-          example: true
-        monitoringTemplateFile:
-          type: string
-          example: file.json
-
     RolesDTO:
       type: object
       properties:
@@ -635,3 +650,22 @@ components:
             long:
               type: string
               example: "Lorem ipsum"
+
+    ConsultingTypePatchDTO:
+      type: object
+      properties:
+        isVideoCallAllowed:
+          type: boolean
+          example: true
+        languageFormal:
+          type: boolean
+          example: true
+        sendFurtherStepsMessage:
+          type: boolean
+          example: true
+        welcomeMessage:
+          allOf:
+            - $ref: '#/components/schemas/WelcomeMessageDTO'
+        notifications:
+          allOf:
+            - $ref: '#/components/schemas/NotificationsDTO'

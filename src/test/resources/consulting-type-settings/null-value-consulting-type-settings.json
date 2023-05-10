@@ -3,15 +3,12 @@
   "tenantId": null,
   "slug": "null-values",
   "excludeNonMainConsultantsFromTeamSessions": false,
-  "lockedAgencies": false,
   "consultantBoundedToConsultingType": false,
   "welcomeMessage": {
     "sendWelcomeMessage": false,
     "welcomeMessageText": null
   },
   "sendFurtherStepsMessage": true,
-  "sendSaveSessionDataMessage": false,
-  "isSetEmailAllowed": true,
   "showAskerProfile": true,
   "isVideoCallAllowed": true,
   "isSubsequentRegistrationAllowed": true,
@@ -30,10 +27,6 @@
   "groupChat": {
     "isGroupChat": false,
     "groupChatRules": null
-  },
-  "monitoring": {
-    "initializeMonitoring": false,
-    "monitoringTemplateFile": null
   },
   "initializeFeedbackChat": false,
   "isPeerChat": false,
@@ -74,6 +67,5 @@
     "requiredAidMissingRedirectUrl": null,
     "registrationPostcodeFallbackUrl": null
   },
-  "voluntaryComponents": null,
   "requiredComponents": null
 }

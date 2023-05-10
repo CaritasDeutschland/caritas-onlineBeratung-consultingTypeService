@@ -33,15 +33,17 @@ public class ApplicationSettingsServiceFacade {
     }
   }
 
-  private void convertPatchedValues(ApplicationSettingsPatchDTO settingsPatchDTO, ApplicationSettingsEntity entity) {
+  private void convertPatchedValues(
+      ApplicationSettingsPatchDTO settingsPatchDTO, ApplicationSettingsEntity entity) {
     if (settingsPatchDTO.getLegalContentChangesBySingleTenantAdminsAllowed() != null) {
-      entity.getLegalContentChangesBySingleTenantAdminsAllowed()
-          .setValue(
-              settingsPatchDTO.getLegalContentChangesBySingleTenantAdminsAllowed().getValue());
+      entity
+          .getLegalContentChangesBySingleTenantAdminsAllowed()
+          .setValue(settingsPatchDTO.getLegalContentChangesBySingleTenantAdminsAllowed());
     }
     if (settingsPatchDTO.getMainTenantSubdomainForSingleDomainMultitenancy() != null) {
-      entity.getMainTenantSubdomainForSingleDomainMultitenancy().setValue(
-          settingsPatchDTO.getMainTenantSubdomainForSingleDomainMultitenancy().getValue());
+      entity
+          .getMainTenantSubdomainForSingleDomainMultitenancy()
+          .setValue(settingsPatchDTO.getMainTenantSubdomainForSingleDomainMultitenancy());
     }
   }
 }

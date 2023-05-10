@@ -20,15 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-/**
- * Loader for the consulting types from the file system.
- */
+/** Loader for the consulting types from the file system. */
 @Service
 @RequiredArgsConstructor
 public class ConsultingTypeLoader {
 
-  @Autowired
-  private ConsultingTypeRepositoryService consultingTypeRepositoryService;
+  @Autowired private ConsultingTypeRepositoryService consultingTypeRepositoryService;
   private final @NonNull ConsultingTypeGroupRepository consultingTypeGroupRepository;
   private final @NonNull ConsultingTypeValidator consultingTypeValidator;
 
@@ -46,7 +43,10 @@ public class ConsultingTypeLoader {
     try {
       addConsultingTypeToRepositories(new ObjectMapper().readValue(file, ConsultingType.class));
     } catch (IOException ioException) {
-      LogService.logError(ioException);
+      LogService.logError(
+          ioException,
+          "Could not deserialize to ConsultingType from consulting type configuration file: "
+              + file.getName());
       throw new UnexpectedErrorException();
     }
   }
