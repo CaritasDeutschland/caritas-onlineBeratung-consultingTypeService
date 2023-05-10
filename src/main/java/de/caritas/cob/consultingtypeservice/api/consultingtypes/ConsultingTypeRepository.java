@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-
 public interface ConsultingTypeRepository extends MongoRepository<ConsultingTypeEntity, String> {
 
   List<ConsultingTypeEntity> findBySlug(String slug);
@@ -14,4 +13,6 @@ public interface ConsultingTypeRepository extends MongoRepository<ConsultingType
   ConsultingTypeEntity findByConsultingTypeId(Integer consultingtypeId);
 
   ConsultingTypeEntity findFirstByOrderByIdDesc();
+
+  ConsultingTypeEntity findByTenantId(Integer tenantId);
 }

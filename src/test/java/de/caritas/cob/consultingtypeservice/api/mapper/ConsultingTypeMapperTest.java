@@ -1,14 +1,11 @@
 package de.caritas.cob.consultingtypeservice.api.mapper;
 
-
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
-
 import de.caritas.cob.consultingtypeservice.api.model.BasicConsultingTypeResponseDTOGroupChat;
-import de.caritas.cob.consultingtypeservice.api.model.MonitoringDTO;
 import de.caritas.cob.consultingtypeservice.api.model.NotificationsDTO;
 import de.caritas.cob.consultingtypeservice.api.model.SessionDataInitializingDTO;
 import de.caritas.cob.consultingtypeservice.api.model.WelcomeMessageDTO;
@@ -45,15 +42,6 @@ public class ConsultingTypeMapperTest {
   }
 
   @Test
-  public void mapMonitoring_Should_InitializeDefaultObjectIfNull() {
-
-    MonitoringDTO result = ConsultingTypeMapper.mapMonitoring(null);
-    assertThat(result, notNullValue());
-    assertThat(result.getInitializeMonitoring(), is(false));
-    assertThat(result.getMonitoringTemplateFile(), nullValue());
-  }
-
-  @Test
   public void mapNotifications_Should_InitializeDefaultObjectIfNull() {
 
     NotificationsDTO result = ConsultingTypeMapper.mapNotifications(null);
@@ -74,5 +62,4 @@ public class ConsultingTypeMapperTest {
     assertThat(result.getGender(), is(false));
     assertThat(result.getRelation(), is(false));
   }
-
 }

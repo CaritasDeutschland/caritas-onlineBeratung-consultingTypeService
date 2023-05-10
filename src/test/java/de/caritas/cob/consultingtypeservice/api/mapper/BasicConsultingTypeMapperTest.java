@@ -15,12 +15,13 @@ public class BasicConsultingTypeMapperTest {
   @Test
   public void mapConsultingType_Should_MapAllBasicProperties() throws IOException {
 
-    BasicConsultingTypeResponseDTO result = BasicConsultingTypeMapper
-        .mapConsultingType(HelperMethods.getConsultingType());
+    BasicConsultingTypeResponseDTO result =
+        BasicConsultingTypeMapper.mapConsultingType(HelperMethods.getConsultingType());
     String resultJson = new ObjectMapper().writeValueAsString(result);
 
     assertThat(result, notNullValue());
-    assertThat(resultJson,
+    assertThat(
+        resultJson,
         jsonEquals(HelperMethods.getConsultingTypeSettingsAsJsonString())
             .whenIgnoringPaths(
                 "lockedAgencies",
@@ -32,20 +33,14 @@ public class BasicConsultingTypeMapperTest {
                 "sendSaveSessionDataMessage",
                 "sessionDataInitializing",
                 "whiteSpot",
-                "monitoring",
                 "initializeFeedbackChat",
                 "isPeerChat",
                 "roles",
                 "notifications",
                 "registration",
-                "voluntaryComponents",
                 "requiredComponents",
                 "groups",
                 "welcomeScreen",
-                "tenantId"
-            )
-    );
+                "tenantId"));
   }
-
-
 }

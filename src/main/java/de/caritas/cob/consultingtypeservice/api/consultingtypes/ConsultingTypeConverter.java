@@ -6,12 +6,12 @@ import de.caritas.cob.consultingtypeservice.api.model.BasicConsultingTypeRespons
 import de.caritas.cob.consultingtypeservice.api.model.BasicConsultingTypeResponseDTOTitles;
 import de.caritas.cob.consultingtypeservice.api.model.BasicConsultingTypeResponseDTOUrls;
 import de.caritas.cob.consultingtypeservice.api.model.ConsultingTypeDTO;
-import de.caritas.cob.consultingtypeservice.api.model.ConsultingTypeDTOMonitoring;
 import de.caritas.cob.consultingtypeservice.api.model.ConsultingTypeDTONotifications;
 import de.caritas.cob.consultingtypeservice.api.model.ConsultingTypeDTOSessionDataInitializing;
 import de.caritas.cob.consultingtypeservice.api.model.ConsultingTypeDTOWelcomeMessage;
 import de.caritas.cob.consultingtypeservice.api.model.ConsultingTypeDTOWhiteSpot;
 import de.caritas.cob.consultingtypeservice.api.model.ConsultingTypeEntity;
+import de.caritas.cob.consultingtypeservice.api.model.ConsultingTypePatchDTO;
 import de.caritas.cob.consultingtypeservice.api.model.RequiredComponentsDTO;
 import de.caritas.cob.consultingtypeservice.api.model.RolesDTO;
 import de.caritas.cob.consultingtypeservice.api.model.WelcomeScreenDTO;
@@ -21,7 +21,6 @@ import de.caritas.cob.consultingtypeservice.schemas.model.ConsultingType;
 import de.caritas.cob.consultingtypeservice.schemas.model.FurtherInformation;
 import de.caritas.cob.consultingtypeservice.schemas.model.GroupChat;
 import de.caritas.cob.consultingtypeservice.schemas.model.MandatoryFields;
-import de.caritas.cob.consultingtypeservice.schemas.model.Monitoring;
 import de.caritas.cob.consultingtypeservice.schemas.model.NewMessage;
 import de.caritas.cob.consultingtypeservice.schemas.model.Notes;
 import de.caritas.cob.consultingtypeservice.schemas.model.Notifications;
@@ -47,8 +46,9 @@ import org.springframework.stereotype.Component;
 public class ConsultingTypeConverter {
 
   public List<ConsultingType> convertList(List<ConsultingTypeEntity> consultingTypeEntities) {
-    return consultingTypeEntities.stream().map(this::copyToConsultingType).collect(
-        Collectors.toList());
+    return consultingTypeEntities.stream()
+        .map(this::copyToConsultingType)
+        .collect(Collectors.toList());
   }
 
   private ConsultingType copyToConsultingType(ConsultingTypeEntity entity) {
@@ -58,7 +58,13 @@ public class ConsultingTypeConverter {
   }
 
   public ConsultingType convert(final ConsultingTypeDTO consultingTypeDTO) {
-    return new ConsultingType()
+
+    return this.convert(new ConsultingType(), consultingTypeDTO);
+  }
+
+  public ConsultingType convert(
+      ConsultingType consultingTypeEntity, final ConsultingTypeDTO consultingTypeDTO) {
+    return consultingTypeEntity
         .withTenantId(consultingTypeDTO.getTenantId())
         .withDescription(consultingTypeDTO.getDescription())
         .withGroups(consultingTypeDTO.getGroups())
@@ -66,17 +72,13 @@ public class ConsultingTypeConverter {
         .withSlug(consultingTypeDTO.getSlug())
         .withExcludeNonMainConsultantsFromTeamSessions(
             consultingTypeDTO.getExcludeNonMainConsultantsFromTeamSessions())
-        .withLockedAgencies(consultingTypeDTO.getLockedAgencies())
         .withWhiteSpot(convert(consultingTypeDTO.getWhiteSpot()))
         .withGroupChat(convert(consultingTypeDTO.getGroupChat()))
         .withConsultantBoundedToConsultingType(
             consultingTypeDTO.getConsultantBoundedToConsultingType())
         .withWelcomeMessage(convert(consultingTypeDTO.getWelcomeMessage()))
         .withSendFurtherStepsMessage(consultingTypeDTO.getSendFurtherStepsMessage())
-        .withSendSaveSessionDataMessage(consultingTypeDTO.getSendSaveSessionDataMessage())
-        .withIsSetEmailAllowed(consultingTypeDTO.getIsSetEmailAllowed())
         .withSessionDataInitializing(convert(consultingTypeDTO.getSessionDataInitializing()))
-        .withMonitoring(convert(consultingTypeDTO.getMonitoring()))
         .withInitializeFeedbackChat(consultingTypeDTO.getInitializeFeedbackChat())
         .withIsPeerChat(consultingTypeDTO.getIsPeerChat())
         .withLanguageFormal(consultingTypeDTO.getLanguageFormal())
@@ -89,10 +91,18 @@ public class ConsultingTypeConverter {
         .withIsVideoCallAllowed(consultingTypeDTO.getIsVideoCallAllowed())
         .withIsSubsequentRegistrationAllowed(consultingTypeDTO.getIsSubsequentRegistrationAllowed())
         .withIsAnonymousConversationAllowed(consultingTypeDTO.getIsAnonymousConversationAllowed())
-        .withVoluntaryComponents(consultingTypeDTO.getVoluntaryComponents())
         .withRequiredComponents(convert(consultingTypeDTO.getRequiredComponents()))
         .withWelcomeScreen(convert(consultingTypeDTO.getWelcomeScreen()));
+  }
 
+  public ConsultingType convert(
+      ConsultingType consultingTypeEntity, final ConsultingTypePatchDTO consultingTypeDTO) {
+    return consultingTypeEntity
+        .withWelcomeMessage(convert(consultingTypeDTO.getWelcomeMessage()))
+        .withSendFurtherStepsMessage(consultingTypeDTO.getSendFurtherStepsMessage())
+        .withLanguageFormal(consultingTypeDTO.getLanguageFormal())
+        .withNotifications(convert(consultingTypeDTO.getNotifications()))
+        .withIsVideoCallAllowed(consultingTypeDTO.getIsVideoCallAllowed());
   }
 
   private WelcomeScreen convert(WelcomeScreenDTO welcomeScreen) {
@@ -100,17 +110,17 @@ public class ConsultingTypeConverter {
       return null;
     }
     return new WelcomeScreen()
-        .withAnonymous(new Anonymous(welcomeScreen.getAnonymous().getTitle(),
-            welcomeScreen.getAnonymous().getText()));
+        .withAnonymous(
+            new Anonymous(
+                welcomeScreen.getAnonymous().getTitle(), welcomeScreen.getAnonymous().getText()));
   }
-
 
   private Urls convert(BasicConsultingTypeResponseDTOUrls urls) {
     if (urls == null) {
       return null;
     }
-    return new Urls(urls.getRequiredAidMissingRedirectUrl(),
-        urls.getRegistrationPostcodeFallbackUrl());
+    return new Urls(
+        urls.getRequiredAidMissingRedirectUrl(), urls.getRegistrationPostcodeFallbackUrl());
   }
 
   private Titles convert(BasicConsultingTypeResponseDTOTitles titles) {
@@ -129,10 +139,14 @@ public class ConsultingTypeConverter {
     return new Registration()
         .withAutoSelectAgency(registration.getAutoSelectAgency())
         .withAutoSelectPostcode(registration.getAutoSelectPostcode())
-        .withNotes(new Notes(registration.getNotes().getAgencySelection(),
-            registration.getNotes().getPassword()))
-        .withMandatoryFields(new MandatoryFields(registration.getMandatoryFields().getAge(),
-            registration.getMandatoryFields().getState()));
+        .withNotes(
+            new Notes(
+                registration.getNotes().getAgencySelection(),
+                registration.getNotes().getPassword()))
+        .withMandatoryFields(
+            new MandatoryFields(
+                registration.getMandatoryFields().getAge(),
+                registration.getMandatoryFields().getState()));
   }
 
   private Notifications convert(ConsultingTypeDTONotifications notifications) {
@@ -141,9 +155,10 @@ public class ConsultingTypeConverter {
     }
     return new Notifications()
         .withTeamSessions(
-            new TeamSessions().withNewMessage(
-                new NewMessage(
-                    notifications.getTeamSessions().getNewMessage().getAllTeamConsultants())));
+            new TeamSessions()
+                .withNewMessage(
+                    new NewMessage(
+                        notifications.getTeamSessions().getNewMessage().getAllTeamConsultants())));
   }
 
   private Roles convert(RolesDTO roles) {
@@ -151,11 +166,6 @@ public class ConsultingTypeConverter {
       return null;
     }
     return new Roles(roles.getConsultant().getRoleNames());
-  }
-
-  private Monitoring convert(ConsultingTypeDTOMonitoring monitoring) {
-    return new Monitoring(monitoring.getInitializeMonitoring(),
-        monitoring.getMonitoringTemplateFile());
   }
 
   private SessionDataInitializing convert(
@@ -175,9 +185,8 @@ public class ConsultingTypeConverter {
     if (welcomeMessage == null) {
       return null;
     }
-    return new WelcomeMessage(welcomeMessage.getSendWelcomeMessage(),
-        welcomeMessage.getWelcomeMessageText());
-
+    return new WelcomeMessage(
+        welcomeMessage.getSendWelcomeMessage(), welcomeMessage.getWelcomeMessageText());
   }
 
   private GroupChat convert(BasicConsultingTypeResponseDTOGroupChat groupChat) {
@@ -199,13 +208,16 @@ public class ConsultingTypeConverter {
       return null;
     }
     List<Option> options = new ArrayList<>();
-    requiredComponents.getAge().getOptions()
+    requiredComponents
+        .getAge()
+        .getOptions()
         .forEach(optionDTO -> options.add(new Option(optionDTO.getValue(), optionDTO.getLabel())));
 
     return new RequiredComponents()
-        .withAge(new Age()
-            .withIsEnabled(requiredComponents.getAge().getIsEnabled())
-            .withOptions(options))
+        .withAge(
+            new Age()
+                .withIsEnabled(requiredComponents.getAge().getIsEnabled())
+                .withOptions(options))
         .withState(new State(requiredComponents.getState().getIsEnabled()));
   }
 

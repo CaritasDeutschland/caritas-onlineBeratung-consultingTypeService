@@ -69,6 +69,21 @@
         "readOnly"
       ]
     },
+    "useConsultingTypesForAgencies": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "readOnly": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "value",
+        "readOnly"
+      ]
+    },
     "enableWalkthrough": {
       "type": "object",
       "properties": {
@@ -186,6 +201,21 @@
       }
     },
     "legalContentChangesBySingleTenantAdminsAllowed": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "readOnly": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "value",
+        "readOnly"
+      ]
+    },
+    "documentationEnabled": {
       "type": "object",
       "properties": {
         "value": {
