@@ -72,6 +72,9 @@ components:
         useTenantService:
           allOf:
             - $ref: '#/components/schemas/FeatureToggleDTO'
+        useConsultingTypesForAgencies:
+          allOf:
+            - $ref: '#/components/schemas/FeatureToggleDTO'
         enableWalkthrough:
           allOf:
             - $ref: '#/components/schemas/FeatureToggleDTO'
@@ -99,16 +102,23 @@ components:
         legalContentChangesBySingleTenantAdminsAllowed:
           allOf:
             - $ref: '#/components/schemas/FeatureToggleDTO'
+        documentationEnabled:
+          allOf:
+            - $ref: '#/components/schemas/FeatureToggleDTO'
+        releaseToggles:
+          type: object
+          additionalProperties:
+            type: object
+
 
     ApplicationSettingsPatchDTO:
       type: object
-      required:
-        - legalContentChangesBySingleTenantAdminsAllowed
       properties:
         legalContentChangesBySingleTenantAdminsAllowed:
-          allOf:
-            - $ref: '#/components/schemas/FeatureToggleDTO'
-
+          type: boolean
+        mainTenantSubdomainForSingleDomainMultitenancy:
+          type: string
+    
     FeatureToggleDTO:
       type: object
       required:
